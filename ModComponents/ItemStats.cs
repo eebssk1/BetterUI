@@ -343,6 +343,7 @@ namespace BetterUI
 
         public static void GetItemStats(StringBuilder stringBuilder, ItemDef itemDef, int stacks, CharacterMaster master)
         {
+            stringBuilder.AppendLine("pid: "+PickupCatalog.FindPickupIndex(itemDef.itemIndex).value.ToString());
             if (itemStats.TryGetValue(itemDef, out var stats))
             {
                 foreach (var itemStat in stats)
