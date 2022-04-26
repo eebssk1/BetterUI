@@ -183,6 +183,28 @@ TN = NoTier Last
 
 ## Changelog
 
+#### v2.5.10
+ - Bugfix: ItemScores: Actually really finalized the fix for nameTokens being empty
+
+#### v2.5.9
+ - Small Change: ItemScores: Total itemscore now rounds to 1 digit
+ - Bugfix: ItemScores: Finalized fix for nameTokens being empty
+
+#### v2.5.8
+ - Bugfix: ItemScores: Fixed 2.5.7 fix
+
+#### v2.5.7
+ - Bugfix: ItemScores: Fixed check that ensures item have a properly set name. 
+
+#### v2.5.6
+ - Small Addition: DPSMeter: Added option to hide the DPSMeter when the chatbox is open (enabled by default)
+ - Small Change: ItemStats: Rounded non-chance percentages to 2 digits as well
+ - Bugfix: DPSMeter: Fixed DPSMeter window being active but nonfunctional if the whole module is disabled
+
+#### v2.5.5
+ - Bugfix: ItemStats: Fixed scaling on EquipemntCooldown Items
+ - Bugfix: ItemCounters: Fixed void items not counting towards item sums for each tiers and the total. In the future, there will be options for each void tier seperately, but for now they are counted together with the non-void counterparts.
+
 #### v2.5.4
  - Bugfix: ItemStats: Fixed typo & scaling on Alien Head
  - Bugfix: ItemStats: Reused the old ItemStatsIntegration setting to toggle ItemStats for now. 

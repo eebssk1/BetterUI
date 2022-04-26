@@ -12,7 +12,7 @@ namespace BetterUI
 {
     [BepInDependency("dev.ontrigger.itemstats", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInPlugin("com.xoxfaby.BetterUI", "BetterUI", "2.5.4")]
+    [BepInPlugin("com.xoxfaby.BetterUI", "BetterUI", "2.5.10")]
     public partial class BetterUIPlugin : BetterUnityPlugin.BetterUnityPlugin<BetterUIPlugin>
     {
         internal static BetterUIPlugin instance;
@@ -42,7 +42,7 @@ namespace BetterUI
             if (ConfigManager.ComponentsCommandImprovements.Value)
                 CommandImprovements.Hook();
             if (ConfigManager.ComponentsDPSMeter.Value)
-                DPSMeter.Hook();
+                DPSMeter.Initialize();
             if (ConfigManager.ComponentsBuffTimers.Value)
                 Buffs.Hook();
             if (ConfigManager.ComponentsAdvancedIcons.Value)

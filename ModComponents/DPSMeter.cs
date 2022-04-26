@@ -22,6 +22,9 @@ namespace BetterUI
         private static readonly Queue<DamageLog> minionDamageLog = new Queue<DamageLog>();
         private static float minionDamageSum = 0;
 
+        private static GameObject DPSMeterPanel;
+        private static RoR2.UI.ChatBox chatBox;
+
         private static HGTextMeshProUGUI textMesh;
         public static float DPS { get => MinionDPS + CharacterDPS; }
         public static float CharacterDPS { get => characterDamageLog.Count > 0 ? characterDamageSum / Clamp(Time.time - characterDamageLog.Peek().time) : 0; }
@@ -37,17 +40,19 @@ namespace BetterUI
             }
         }
 
-        static DPSMeter()
+        internal static void Initialize()
         {
-            BetterUIPlugin.onHUDAwake += onHUDAwake;
-            BetterUIPlugin.onUpdate += onUpdate;
-        }
-        internal static void Hook()
-        {
-            if (ConfigManager.DPSMeterWindowShow.Value ||
-            ConfigManager.StatsDisplayStatString.Value.Contains("$dps"))
+            BetterUIPlugin.Hooks.Add<GlobalEventManager, DamageDealtMessage>("ClientDamageNotified", DamageDealtMessage_ClientDamageNotified);
+
+            BetterUIPlugin.onEnable += () => BetterUIPlugin.onUpdate += onUpdate;
+            BetterUIPlugin.onDisable += () => BetterUIPlugin.onUpdate -= onUpdate;
+
+            if (ConfigManager.DPSMeterWindowShow.Value)
             {
-                BetterUIPlugin.Hooks.Add<GlobalEventManager, DamageDealtMessage>("ClientDamageNotified", DamageDealtMessage_ClientDamageNotified);
+                BetterUIPlugin.onEnable += () => BetterUIPlugin.onHUDAwake += onHUDAwake;
+                BetterUIPlugin.onDisable += () => BetterUIPlugin.onHUDAwake -= onHUDAwake;
+
+                if (ConfigManager.DPSMeterWindowHideWhenTyping.Value) BetterUIPlugin.Hooks.Add<RoR2.UI.ChatBox>(nameof(RoR2.UI.ChatBox.Awake), ChatBox_Awake);
             }
         }
 
@@ -75,8 +80,14 @@ namespace BetterUI
 
                 textMesh.SetText(BetterUIPlugin.sharedStringBuilder);
             }
+            if (chatBox != null && DPSMeterPanel != null) DPSMeterPanel.gameObject.SetActive(!chatBox.showInput);
         }
 
+        public static void ChatBox_Awake(Action<RoR2.UI.ChatBox> orig, RoR2.UI.ChatBox self)
+        {
+            orig(self);
+            chatBox = self;
+        }
         public static void DamageDealtMessage_ClientDamageNotified(Action<DamageDealtMessage> orig, DamageDealtMessage dmgMsg)
         {
             orig(dmgMsg);
@@ -110,10 +121,10 @@ namespace BetterUI
 
         private static void onHUDAwake(HUD self)
         {
-            if (ConfigManager.DPSMeterWindowShow.Value)
+            if (DPSMeterPanel == null)
             {
 
-                GameObject DPSMeterPanel = new GameObject("DPSMeterPanel");
+                DPSMeterPanel = new GameObject("DPSMeterPanel");
                 RectTransform rectTransform = DPSMeterPanel.AddComponent<RectTransform>();
 
                 DPSMeterPanel.transform.SetParent(BetterUIPlugin.hud.mainContainer.transform);
